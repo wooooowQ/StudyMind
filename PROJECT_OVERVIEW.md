@@ -229,6 +229,4 @@ GET /stats/dashboard?date={date}&days={days}
 | 导出与备份 | `/export`、`/backup` | 读取主要业务表或复制 SQLite 数据库 |
 | 桌面便签 | 复用 `RefreshCommand`、`GenerateAdviceCommand` 和已加载集合 | 生成今日计划时写入 `emotion_logs`、`advice_logs`；本地分页和窗口偏好保存到 `cyber-note-settings.json` |
 
-### 前端小结
-
 前端围绕学生实际使用流程组织页面，并通过桌面便签把完整规划界面延伸为轻量伴随窗口；后端围绕数据存储、规则分析、AI 增强和统计聚合提供能力。两部分通过 HTTP/JSON 解耦，使系统既便于本地演示，也便于后续扩展。例如，后续可以将关键词情绪识别替换为训练后的文本分类模型，增加云同步、多用户登录、学习提醒、番茄钟或更复杂的排程算法。
