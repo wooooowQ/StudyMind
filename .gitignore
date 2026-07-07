@@ -1,0 +1,41 @@
+# Build output
+dist/
+**/bin/
+**/obj/
+**/target/
+
+# Local databases and app data
+backend/data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# IDE and editor state
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS and logs
+Thumbs.db
+Desktop.ini
+*.log
+
+# Rust
+**/*.rs.bk
+
+# .NET packaging
+*.nupkg
+*.snupkg

@@ -1,0 +1,1208 @@
+<Window
+    x:Class="StudyMind.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root" Background="{ThemeResource StudyMindPageBackgroundBrush}" SizeChanged="Root_SizeChanged">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="MinWidth" Value="44" />
+                <Setter Property="MinHeight" Value="44" />
+            </Style>
+            <Style TargetType="FontIcon">
+                <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />
+            </Style>
+            <Style TargetType="ProgressRing">
+                <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />
+            </Style>
+
+            <Style x:Key="PanelBorderStyle" TargetType="Border">
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindPanelStrokeBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindPanelBrush}" />
+            </Style>
+            <Style x:Key="HeroPanelBorderStyle" TargetType="Border">
+                <Setter Property="Padding" Value="22" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindAccentSoftBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindHeroBrush}" />
+            </Style>
+            <Style x:Key="SoftTileBorderStyle" TargetType="Border">
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindPanelStrokeBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindSoftSurfaceBrush}" />
+            </Style>
+            <Style x:Key="FocusTileBorderStyle" BasedOn="{StaticResource SoftTileBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindInfoBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindInfoSoftBrush}" />
+            </Style>
+            <Style x:Key="RiskTileBorderStyle" BasedOn="{StaticResource SoftTileBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindWarningBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindWarningSoftBrush}" />
+            </Style>
+            <Style x:Key="SuccessTileBorderStyle" BasedOn="{StaticResource SoftTileBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindSuccessBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindSuccessSoftBrush}" />
+            </Style>
+            <Style x:Key="DataTileBorderStyle" BasedOn="{StaticResource SoftTileBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindInfoBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindInfoSoftBrush}" />
+            </Style>
+            <Style x:Key="PillBorderStyle" TargetType="Border">
+                <Setter Property="Padding" Value="10,5" />
+                <Setter Property="CornerRadius" Value="999" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindAccentSoftBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindSoftSurfaceBrush}" />
+            </Style>
+            <Style x:Key="InfoPillBorderStyle" BasedOn="{StaticResource PillBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindInfoBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindInfoSoftBrush}" />
+            </Style>
+            <Style x:Key="WarningPillBorderStyle" BasedOn="{StaticResource PillBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindWarningBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindWarningSoftBrush}" />
+            </Style>
+            <Style x:Key="SuccessPillBorderStyle" BasedOn="{StaticResource PillBorderStyle}" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindSuccessBrush}" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindSuccessSoftBrush}" />
+            </Style>
+            <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+            <Style x:Key="HeroTitleStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            <Style x:Key="MetaTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource StudyMindTextMutedBrush}" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource StudyMindDangerBrush}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="AutomationProperties.LiveSetting" Value="Polite" />
+            </Style>
+            <Style x:Key="MetricValueTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
+                <Setter Property="MinHeight" Value="44" />
+                <Setter Property="Padding" Value="16,9" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Background" Value="{ThemeResource StudyMindAccentBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource StudyMindAccentBrush}" />
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+            <Style x:Key="CompactIconButtonStyle" TargetType="Button">
+                <Setter Property="MinWidth" Value="44" />
+                <Setter Property="MinHeight" Value="44" />
+                <Setter Property="Padding" Value="8,6" />
+            </Style>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <NavigationView
+            x:Name="ShellNav"
+            Grid.Row="0"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            CompactModeThresholdWidth="720"
+            CompactPaneLength="56"
+            ExpandedModeThresholdWidth="980"
+            OpenPaneLength="220"
+            PaneDisplayMode="Auto"
+            SelectionChanged="ShellNav_SelectionChanged">
+            <NavigationView.Header>
+                <Grid MinHeight="56" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Text="{Binding CurrentPageTitle}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        VerticalAlignment="Center"
+                        TextWrapping="NoWrap" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="0,0,24,0" VerticalAlignment="Center">
+                        <Button Click="ShowCyberNote_Click" VerticalAlignment="Center" ToolTipService.ToolTip="打开桌面便签" AutomationProperties.Name="打开桌面便签">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8A7;" FontSize="14" />
+                                <TextBlock Text="便签" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding RefreshCommand}" IsEnabled="{Binding IsNotBusy}" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                                <TextBlock Text="刷新" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </NavigationView.Header>
+
+            <NavigationView.PaneFooter>
+                <Border Padding="16,12" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource StudyMindPanelStrokeBrush}">
+                    <StackPanel Spacing="6">
+                        <ProgressBar IsIndeterminate="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" Height="2" />
+                        <TextBlock
+                            Text="{Binding StatusMessage}"
+                            Style="{StaticResource MetaTextStyle}"
+                            MaxLines="2"
+                            TextTrimming="CharacterEllipsis"
+                            AutomationProperties.LiveSetting="Polite" />
+                    </StackPanel>
+                </Border>
+            </NavigationView.PaneFooter>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="TodayNav" Content="今日计划" Tag="today">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE787;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="CoursesNav" Content="课程知识点" Tag="courses">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE82D;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="ScheduleNav" Content="日程" Tag="schedule">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE787;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="RecordsNav" Content="学习记录" Tag="records">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE70B;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="ReviewNav" Content="复盘" Tag="review">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D2;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="SettingsNav" Content="设置" Tag="settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <Grid Padding="24,12,24,24">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding TodayPageVisibility}">
+                    <Grid x:Name="TodayLayout" ColumnSpacing="18" RowSpacing="18">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="TodayPrimaryColumn" Width="0.86*" />
+                            <ColumnDefinition x:Name="TodaySecondaryColumn" Width="1.34*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Spacing="18">
+                            <Border Style="{StaticResource HeroPanelBorderStyle}">
+                                <StackPanel Spacing="14">
+                                    <TextBlock Text="从状态到学习动作" Style="{StaticResource HeroTitleStyle}" />
+                                    <TextBlock Text="写下此刻的状态，StudyMind 会把情绪、DDL 和学习记录整理成一份可执行计划。" Style="{StaticResource MetaTextStyle}" />
+                                    <Border Style="{StaticResource PillBorderStyle}" HorizontalAlignment="Left" Visibility="{Binding FirstRunHintVisibility}">
+                                        <TextBlock Text="补充课程和 DDL 后，推荐会更准确" Foreground="{ThemeResource StudyMindAccentBrush}" FontSize="12" />
+                                    </Border>
+                                    <DatePicker Header="日期" Date="{Binding TodayDateValue, Mode=TwoWay}" />
+                                    <TextBox
+                                        Header="今日状态"
+                                        Height="128"
+                                        AcceptsReturn="True"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding TodayState, Mode=TwoWay}"
+                                        PlaceholderText="例如：考试快到了，有点焦虑；或者今天状态不错，想多复习一点…" />
+                                    <Button Command="{Binding GenerateAdviceCommand}" HorizontalAlignment="Left" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryActionButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9D2;" FontSize="14" />
+                                            <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                            <TextBlock Text="生成今日计划" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="状态与节奏" Style="{StaticResource SectionTitleStyle}" />
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource SoftTileBorderStyle}">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="情绪 / 压力" Style="{StaticResource MetaTextStyle}" FontSize="12" />
+                                                <TextBlock Text="{Binding TodayEmotion}" Style="{StaticResource MetricValueTextStyle}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" Style="{StaticResource SoftTileBorderStyle}">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="学习状态 / 强度" Style="{StaticResource MetaTextStyle}" FontSize="12" />
+                                                <TextBlock Text="{Binding TodayLearningState}" Style="{StaticResource MetricValueTextStyle}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource SoftTileBorderStyle}">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="分析依据" Style="{StaticResource MetaTextStyle}" FontSize="12" />
+                                            <TextBlock Text="{Binding TodayEmotionDetails}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                    <InfoBar
+                                        IsOpen="True"
+                                        Severity="Warning"
+                                        Title="建议来源"
+                                        Message="{Binding AdviceSourceText}"
+                                        Visibility="{Binding FallbackNoticeVisibility}" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="今日概览" Style="{StaticResource SectionTitleStyle}" />
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource SoftTileBorderStyle}">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="学习总时长" Style="{StaticResource MetaTextStyle}" FontSize="12" />
+                                                <TextBlock Text="{Binding StatsTotalMinutes}" Style="{StaticResource MetricValueTextStyle}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" Style="{StaticResource SoftTileBorderStyle}">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="知识点进度" Style="{StaticResource MetaTextStyle}" FontSize="12" />
+                                                <TextBlock Text="{Binding OverallProgressText}" Style="{StaticResource MetricValueTextStyle}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource FocusTileBorderStyle}">
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="今日重点" Foreground="{ThemeResource StudyMindInfoBrush}" FontSize="12" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding TodayFocusText}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding NextUpcomingEventText}" Style="{StaticResource MetaTextStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel x:Name="TodayOutputPanel" Grid.Column="1" Spacing="18">
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="14">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="今日建议" Style="{StaticResource SectionTitleStyle}" />
+                                        <Border Grid.Column="1" Style="{StaticResource InfoPillBorderStyle}">
+                                            <TextBlock Text="{Binding AdviceSourceText}" Foreground="{ThemeResource StudyMindInfoBrush}" FontSize="12" MaxWidth="220" TextTrimming="CharacterEllipsis" />
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource FocusTileBorderStyle}">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="下一步" Foreground="{ThemeResource StudyMindInfoBrush}" FontSize="12" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding TodayFocusText}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding TodayAdvice}" TextWrapping="Wrap" IsTextSelectionEnabled="True" FontSize="16" LineHeight="24" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="推荐任务" Style="{StaticResource SectionTitleStyle}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding RecommendedTaskCountText}" Style="{StaticResource MetaTextStyle}" />
+                                    </Grid>
+                                    <Border Style="{StaticResource SoftTileBorderStyle}" Visibility="{Binding EmptyRecommendedTasksVisibility}">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="还没有推荐任务" FontWeight="SemiBold" />
+                                            <TextBlock Text="录入课程、知识点和日程后，再生成今日计划。" Style="{StaticResource MetaTextStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ListView ItemsSource="{Binding RecommendedTasks}" MaxHeight="520">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource SoftTileBorderStyle}" Margin="0,0,0,8">
+                                                    <Grid RowSpacing="8" ColumnSpacing="12">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding TopicName}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                            <TextBlock Text="{Binding CourseAndMinutesText}" Style="{StaticResource MetaTextStyle}" />
+                                                        </StackPanel>
+                                                        <Border Grid.Column="1" Style="{StaticResource WarningPillBorderStyle}">
+                                                            <TextBlock Text="{Binding PriorityText}" Foreground="{ThemeResource StudyMindWarningBrush}" FontSize="12" FontWeight="SemiBold" />
+                                                        </Border>
+                                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Reason}" TextWrapping="Wrap" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="8">
+                                                            <Button
+                                                                Command="{Binding DataContext.UseTaskForRecordCommand, ElementName=Root}"
+                                                                CommandParameter="{Binding}"
+                                                                IsEnabled="{Binding DataContext.IsNotBusy, ElementName=Root}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                    <FontIcon Glyph="&#xE70B;" FontSize="14" />
+                                                                    <TextBlock Text="记录学习" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                            <Button
+                                                                Command="{Binding DataContext.CompleteRecommendedTaskCommand, ElementName=Root}"
+                                                                CommandParameter="{Binding}"
+                                                                IsEnabled="{Binding DataContext.IsNotBusy, ElementName=Root}"
+                                                                Style="{StaticResource PrimaryActionButtonStyle}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                    <FontIcon Glyph="&#xE930;" FontSize="14" />
+                                                                    <ProgressRing Width="16" Height="16" IsActive="{Binding DataContext.IsBusy, ElementName=Root}" Visibility="{Binding DataContext.BusyVisibility, ElementName=Root}" />
+                                                                    <TextBlock Text="完成并记录" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding CoursesPageVisibility}">
+                    <Grid x:Name="CoursesLayout" RowSpacing="18">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="CoursesNarrow" />
+                                <VisualState x:Name="CoursesWide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="500" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="CoursesLayout.ColumnSpacing" Value="18" />
+                                        <Setter Target="CoursesPrimaryColumn.Width" Value="0.8*" />
+                                        <Setter Target="CoursesSecondaryColumn.Width" Value="1.25*" />
+                                        <Setter Target="CoursesListPanel.(Grid.Row)" Value="0" />
+                                        <Setter Target="CoursesListPanel.(Grid.Column)" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="CoursesPrimaryColumn" Width="*" />
+                            <ColumnDefinition x:Name="CoursesSecondaryColumn" Width="0" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Spacing="18">
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="课程维护" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding CourseEditorModeText}" Style="{StaticResource MetaTextStyle}" />
+                                    <InfoBar IsOpen="True" Severity="Warning" Title="需要处理" Message="{Binding FormMessage}" Visibility="{Binding FormMessageVisibility}" AutomationProperties.LiveSetting="Polite" />
+                                    <TextBox x:Name="CourseNameBox" Header="课程名称 *" Text="{Binding NewCourseName, Mode=TwoWay}" />
+                                    <TextBlock Text="{Binding CourseNameError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding CourseNameErrorVisibility}" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding SaveCourseCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryActionButtonStyle}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                                <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                                <TextBlock Text="保存课程" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1" Command="{Binding ResetCourseFormCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="新建课程" AutomationProperties.Name="新建课程">
+                                            <FontIcon Glyph="&#xE894;" FontSize="14" />
+                                        </Button>
+                                        <Button Grid.Column="2" Click="DeleteCourse_Click" IsEnabled="{Binding IsNotBusy}" Foreground="{ThemeResource StudyMindDangerBrush}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="删除课程及关联数据" AutomationProperties.Name="删除课程及关联数据">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                        </Button>
+                                    </Grid>
+                                    <InfoBar
+                                        IsOpen="True"
+                                        Severity="Informational"
+                                        Title="还没有课程"
+                                        Message="先添加课程，再为课程建立知识点。"
+                                        Visibility="{Binding EmptyCoursesVisibility}" />
+                                    <ListView ItemsSource="{Binding Courses}" SelectedItem="{Binding SelectedCourse, Mode=TwoWay}" MaxHeight="220">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" Padding="4" />
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="知识点表单" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding TopicEditorModeText}" Style="{StaticResource MetaTextStyle}" />
+                                    <InfoBar IsOpen="True" Severity="Warning" Title="需要处理" Message="{Binding FormMessage}" Visibility="{Binding FormMessageVisibility}" AutomationProperties.LiveSetting="Polite" />
+                                    <ComboBox x:Name="TopicCourseBox" Header="所属课程 *" ItemsSource="{Binding Courses}" SelectedItem="{Binding SelectedTopicCourse, Mode=TwoWay}" DisplayMemberPath="Name" />
+                                    <TextBlock Text="{Binding TopicCourseError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding TopicCourseErrorVisibility}" />
+                                    <TextBox x:Name="TopicNameBox" Header="知识点名称 *" Text="{Binding NewTopicName, Mode=TwoWay}" />
+                                    <TextBlock Text="{Binding TopicNameError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding TopicNameErrorVisibility}" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox Header="掌握程度" SelectedValue="{Binding NewTopicMastery, Mode=TwoWay}" SelectedValuePath="Content">
+                                            <ComboBoxItem Content="未掌握" />
+                                            <ComboBoxItem Content="学习中" />
+                                            <ComboBoxItem Content="已掌握" />
+                                        </ComboBox>
+                                        <NumberBox Grid.Column="1" Header="重要性" Minimum="1" Maximum="5" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" Value="{Binding NewTopicImportance, Mode=TwoWay}" />
+                                        <NumberBox Grid.Column="2" Header="预计分钟" Minimum="5" Maximum="240" SmallChange="5" LargeChange="15" SpinButtonPlacementMode="Inline" Value="{Binding NewTopicMinutes, Mode=TwoWay}" />
+                                    </Grid>
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox Header="关联考试/DDL" ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedTopicEvent, Mode=TwoWay}" DisplayMemberPath="Title" />
+                                        <ComboBox Grid.Column="1" Header="任务状态" SelectedValue="{Binding NewTopicStatus, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="待学习" Tag="pending" />
+                                            <ComboBoxItem Content="已完成" Tag="completed" />
+                                        </ComboBox>
+                                    </Grid>
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding SaveTopicCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryActionButtonStyle}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                                <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                                <TextBlock Text="保存知识点" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1" Command="{Binding ResetTopicFormCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="新建知识点" AutomationProperties.Name="新建知识点">
+                                            <FontIcon Glyph="&#xE894;" FontSize="14" />
+                                        </Button>
+                                        <Button Grid.Column="2" Click="DeleteTopic_Click" IsEnabled="{Binding IsNotBusy}" Foreground="{ThemeResource StudyMindDangerBrush}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="删除知识点及学习记录" AutomationProperties.Name="删除知识点及学习记录">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                        </Button>
+                                    </Grid>
+                                    <ListView ItemsSource="{Binding WeeklyStats}" MaxHeight="150" Visibility="{Binding StudyMinutesDetailsVisibility}" AutomationProperties.Name="学习时长趋势明细">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Padding="6" ColumnSpacing="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding DateDisplay}" FontWeight="SemiBold" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding MinutesText}" Style="{StaticResource MetaTextStyle}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <Border x:Name="CoursesListPanel" Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="知识点清单" Style="{StaticResource SectionTitleStyle}" />
+                                <InfoBar
+                                    IsOpen="True"
+                                    Severity="Informational"
+                                    Title="还没有知识点"
+                                    Message="添加知识点后，系统才能结合掌握程度、重要性和 DDL 生成推荐任务。"
+                                    Visibility="{Binding EmptyTopicsVisibility}" />
+                                <ListView ItemsSource="{Binding Topics}" SelectedItem="{Binding SelectedTopic, Mode=TwoWay}" MaxHeight="560">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SoftTileBorderStyle}" Margin="0,0,0,8">
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding CourseDisplay}" Style="{StaticResource MetaTextStyle}" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock Text="{Binding MasteryLevel}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        <TextBlock Text="{Binding ImportanceText}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        <TextBlock Text="{Binding StatusDisplay}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding SchedulePageVisibility}">
+                    <Grid x:Name="ScheduleLayout" RowSpacing="18">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="ScheduleNarrow" />
+                                <VisualState x:Name="ScheduleWide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="500" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="ScheduleLayout.ColumnSpacing" Value="18" />
+                                        <Setter Target="SchedulePrimaryColumn.Width" Value="1.15*" />
+                                        <Setter Target="ScheduleSecondaryColumn.Width" Value="0.9*" />
+                                        <Setter Target="ScheduleListPanel.(Grid.Row)" Value="0" />
+                                        <Setter Target="ScheduleListPanel.(Grid.Column)" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="SchedulePrimaryColumn" Width="*" />
+                            <ColumnDefinition x:Name="ScheduleSecondaryColumn" Width="0" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="日程表单" Style="{StaticResource SectionTitleStyle}" />
+                                <TextBlock Text="{Binding EventEditorModeText}" Style="{StaticResource MetaTextStyle}" />
+                                <TextBox x:Name="EventTitleBox" Header="标题 *" Text="{Binding NewEventTitle, Mode=TwoWay}" />
+                                <TextBlock Text="{Binding EventTitleError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding EventTitleErrorVisibility}" />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Header="类型" SelectedValue="{Binding NewEventType, Mode=TwoWay}" SelectedValuePath="Content">
+                                        <ComboBoxItem Content="考试" />
+                                        <ComboBoxItem Content="作业" />
+                                        <ComboBoxItem Content="活动" />
+                                    </ComboBox>
+                                    <ComboBox Grid.Column="1" Header="关联课程" ItemsSource="{Binding Courses}" SelectedItem="{Binding SelectedEventCourse, Mode=TwoWay}" DisplayMemberPath="Name" />
+                                </Grid>
+                                <ToggleSwitch
+                                    Header="时间模式"
+                                    IsOn="{Binding NewEventUseEndOnly, Mode=TwoWay}"
+                                    OffContent="使用开始/结束日期范围"
+                                    OnContent="仅设置结束时间点" />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.15*" />
+                                        <ColumnDefinition Width="1.15*" />
+                                        <ColumnDefinition Width="0.7*" />
+                                    </Grid.ColumnDefinitions>
+                                    <DatePicker x:Name="EventStartPicker" Header="开始" Date="{Binding NewEventStartDate, Mode=TwoWay}" IsEnabled="{Binding NewEventRangeStartEnabled}" />
+                                    <DatePicker x:Name="EventEndPicker" Grid.Column="1" Header="结束时间点" Date="{Binding NewEventEndDate, Mode=TwoWay}" />
+                                    <NumberBox Grid.Column="2" Header="重要性" Minimum="1" Maximum="5" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" Value="{Binding NewEventImportance, Mode=TwoWay}" />
+                                </Grid>
+                                <TextBlock Text="{Binding EventDateError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding EventDateErrorVisibility}" />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Click="SaveEvent_Click" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryActionButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                            <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                            <TextBlock Text="保存日程" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Grid.Column="1" Command="{Binding ResetEventFormCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="新建日程" AutomationProperties.Name="新建日程">
+                                        <FontIcon Glyph="&#xE894;" FontSize="14" />
+                                    </Button>
+                                    <Button Grid.Column="2" Click="DeleteEvent_Click" IsEnabled="{Binding IsNotBusy}" Foreground="{ThemeResource StudyMindDangerBrush}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="删除日程" AutomationProperties.Name="删除日程">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                    </Button>
+                                </Grid>
+                                <InfoBar IsOpen="True" Severity="Success" Title="已完成" Message="{Binding EventSuccessMessage}" Visibility="{Binding EventSuccessMessageVisibility}" AutomationProperties.LiveSetting="Polite" />
+                                <InfoBar IsOpen="True" Severity="Warning" Title="需要处理" Message="{Binding FormMessage}" Visibility="{Binding FormMessageVisibility}" AutomationProperties.LiveSetting="Polite" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="ScheduleListPanel" Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="考试与 DDL" Style="{StaticResource SectionTitleStyle}" />
+                                <InfoBar
+                                    IsOpen="True"
+                                    Severity="Informational"
+                                    Title="还没有日程"
+                                    Message="添加考试、作业 DDL 或活动后，今日计划会考虑紧急程度和冲突。"
+                                    Visibility="{Binding EmptyEventsVisibility}" />
+                                <ListView ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedEvent, Mode=TwoWay}" MaxHeight="560">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SoftTileBorderStyle}" Margin="0,0,0,8">
+                                                <Grid ColumnSpacing="12">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="4" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="{ThemeResource StudyMindWarningBrush}" CornerRadius="2" />
+                                                    <StackPanel Grid.Column="1" Spacing="4">
+                                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding RelatedCourseDisplay}" Style="{StaticResource MetaTextStyle}" />
+                                                        <TextBlock Text="{Binding TimeDisplay}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2" Spacing="6" HorizontalAlignment="Right">
+                                                        <Border Style="{StaticResource InfoPillBorderStyle}">
+                                                            <TextBlock Text="{Binding EventType}" Foreground="{ThemeResource StudyMindInfoBrush}" FontSize="12" FontWeight="SemiBold" />
+                                                        </Border>
+                                                        <Border Style="{StaticResource WarningPillBorderStyle}">
+                                                            <TextBlock Text="{Binding ImportanceText}" Foreground="{ThemeResource StudyMindWarningBrush}" FontSize="12" FontWeight="SemiBold" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding RecordsPageVisibility}">
+                    <Grid x:Name="RecordsLayout" RowSpacing="18">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="RecordsNarrow" />
+                                <VisualState x:Name="RecordsWide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="500" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="RecordsLayout.ColumnSpacing" Value="18" />
+                                        <Setter Target="RecordsPrimaryColumn.Width" Value="1.1*" />
+                                        <Setter Target="RecordsSecondaryColumn.Width" Value="0.95*" />
+                                        <Setter Target="RecordsListPanel.(Grid.Row)" Value="0" />
+                                        <Setter Target="RecordsListPanel.(Grid.Column)" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="RecordsPrimaryColumn" Width="*" />
+                            <ColumnDefinition x:Name="RecordsSecondaryColumn" Width="0" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Spacing="18">
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="记录学习" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding RecordEditorModeText}" Style="{StaticResource MetaTextStyle}" />
+                                    <InfoBar IsOpen="True" Severity="Warning" Title="需要处理" Message="{Binding FormMessage}" Visibility="{Binding FormMessageVisibility}" AutomationProperties.LiveSetting="Polite" />
+                                    <ComboBox x:Name="RecordTopicBox" Header="知识点 *" ItemsSource="{Binding Topics}" SelectedItem="{Binding SelectedTopic, Mode=TwoWay}" DisplayMemberPath="Name" />
+                                    <TextBlock Text="{Binding RecordTopicError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding RecordTopicErrorVisibility}" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="0.75*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <DatePicker Header="日期" Date="{Binding NewRecordDateValue, Mode=TwoWay}" />
+                                        <NumberBox x:Name="RecordMinutesBox" Grid.Column="1" Header="分钟 *" Minimum="1" Maximum="480" SmallChange="5" LargeChange="30" SpinButtonPlacementMode="Inline" Value="{Binding NewRecordMinutes, Mode=TwoWay}" />
+                                        <ComboBox Grid.Column="2" Header="完成情况" SelectedValue="{Binding NewRecordCompletion, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="部分完成" Tag="partial" />
+                                            <ComboBoxItem Content="已完成" Tag="completed" />
+                                        </ComboBox>
+                                    </Grid>
+                                    <TextBlock Text="{Binding RecordMinutesError}" Style="{StaticResource ErrorTextStyle}" Visibility="{Binding RecordMinutesErrorVisibility}" />
+                                    <TextBox Header="备注" Text="{Binding NewRecordNote, Mode=TwoWay}" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding SaveStudyRecordCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryActionButtonStyle}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                                <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                                <TextBlock Text="保存记录" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1" Command="{Binding ResetRecordFormCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="新建学习记录" AutomationProperties.Name="新建学习记录">
+                                            <FontIcon Glyph="&#xE894;" FontSize="14" />
+                                        </Button>
+                                        <Button Grid.Column="2" Click="DeleteStudyRecord_Click" IsEnabled="{Binding IsNotBusy}" Foreground="{ThemeResource StudyMindDangerBrush}" Style="{StaticResource CompactIconButtonStyle}" ToolTipService.ToolTip="删除学习记录" AutomationProperties.Name="删除学习记录">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                        </Button>
+                                    </Grid>
+                                    <ListView ItemsSource="{Binding EmotionTrend}" MaxHeight="150" Visibility="{Binding EmotionTrendDetailsVisibility}" AutomationProperties.Name="情绪趋势明细">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding SummaryText}" Padding="6" TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="近 14 天摘要" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding StatsAverageMinutes}" Style="{StaticResource MetaTextStyle}" />
+                                    <ListView ItemsSource="{Binding WeeklyStats}" MaxHeight="260">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Padding="6" ColumnSpacing="12">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="90" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding DateDisplay}" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding MinutesText}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <Border x:Name="RecordsListPanel" Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="学习记录" Style="{StaticResource SectionTitleStyle}" />
+                                <InfoBar
+                                    IsOpen="True"
+                                    Severity="Informational"
+                                    Title="还没有学习记录"
+                                    Message="记录学习时长和完成情况后，复盘图表与今日推荐会逐渐变准。"
+                                    Visibility="{Binding EmptyStudyRecordsVisibility}" />
+                                <ListView ItemsSource="{Binding StudyRecords}" SelectedItem="{Binding SelectedStudyRecord, Mode=TwoWay}" MaxHeight="560">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SoftTileBorderStyle}" Margin="0,0,0,8">
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Text="{Binding TopicDisplay}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock Text="{Binding DateDisplay}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        <TextBlock Text="{Binding MinutesText}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        <TextBlock Text="{Binding CompletionDisplay}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Note}" Style="{StaticResource MetaTextStyle}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding ReviewPageVisibility}">
+                    <StackPanel Spacing="18">
+                        <Grid x:Name="ReviewToolbarLayout" ColumnSpacing="12" RowSpacing="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="ReviewToolbarPrimaryColumn" Width="*" />
+                                <ColumnDefinition x:Name="ReviewToolbarDaysColumn" Width="180" />
+                                <ColumnDefinition x:Name="ReviewToolbarActionColumn" Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="ReviewRangeText" Text="{Binding StatsRange}" Style="{StaticResource MetaTextStyle}" VerticalAlignment="Center" />
+                            <NumberBox x:Name="ReviewDaysBox" Grid.Column="1" Header="统计天数" Minimum="7" Maximum="30" SmallChange="1" LargeChange="7" SpinButtonPlacementMode="Inline" Value="{Binding StatsDays, Mode=TwoWay}" />
+                            <Button x:Name="ReviewRefreshButton" Grid.Column="2" Command="{Binding RefreshStatsCommand}" IsEnabled="{Binding IsNotBusy}" VerticalAlignment="Bottom">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                                    <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                    <TextBlock Text="更新复盘" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <Grid x:Name="ReviewSummaryLayout" ColumnSpacing="14" RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="ReviewSummaryPrimaryColumn" Width="*" />
+                                <ColumnDefinition x:Name="ReviewSummarySecondaryColumn" Width="*" />
+                                <ColumnDefinition x:Name="ReviewSummaryTertiaryColumn" Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="ReviewMinutesTile" Style="{StaticResource DataTileBorderStyle}">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="学习投入" Foreground="{ThemeResource StudyMindInfoBrush}" FontSize="12" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding StatsTotalMinutes}" Style="{StaticResource MetricValueTextStyle}" />
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="ReviewProgressTile" Grid.Column="1" Style="{StaticResource SuccessTileBorderStyle}">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="完成进度" Foreground="{ThemeResource StudyMindSuccessBrush}" FontSize="12" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding OverallProgressText}" Style="{StaticResource MetricValueTextStyle}" />
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="ReviewRiskTile" Grid.Column="2" Style="{StaticResource RiskTileBorderStyle}">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="近期风险" Foreground="{ThemeResource StudyMindWarningBrush}" FontSize="12" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ReviewRiskText}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Grid x:Name="ReviewLearningChartsLayout" RowSpacing="18">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="ReviewLearningChartsNarrow" />
+                                    <VisualState x:Name="ReviewLearningChartsWide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="500" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="ReviewLearningChartsLayout.ColumnSpacing" Value="18" />
+                                            <Setter Target="ReviewLearningPrimaryColumn.Width" Value="1.35*" />
+                                            <Setter Target="ReviewLearningSecondaryColumn.Width" Value="*" />
+                                            <Setter Target="CourseMinutesPanel.(Grid.Row)" Value="0" />
+                                            <Setter Target="CourseMinutesPanel.(Grid.Column)" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="ReviewLearningPrimaryColumn" Width="*" />
+                                <ColumnDefinition x:Name="ReviewLearningSecondaryColumn" Width="0" />
+                            </Grid.ColumnDefinitions>
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="学习时长趋势" Style="{StaticResource SectionTitleStyle}" />
+                                    <Grid Height="250">
+                                        <lvc:CartesianChart
+                                            Series="{Binding StudyMinutesSeries}"
+                                            XAxes="{Binding StudyMinutesXAxes}"
+                                            YAxes="{Binding StudyMinutesYAxes}" />
+                                        <Border
+                                            Padding="16"
+                                            Background="{ThemeResource StudyMindSoftSurfaceBrush}"
+                                            Visibility="{Binding EmptyStudyMinutesChartVisibility}">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="暂无学习时长记录。添加一次学习记录后，趋势会显示在这里。"
+                                                TextWrapping="Wrap" />
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="CourseMinutesPanel" Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="课程学习占比" Style="{StaticResource SectionTitleStyle}" />
+                                    <Grid Height="250">
+                                        <lvc:PieChart Series="{Binding CourseMinutesSeries}" />
+                                        <Border
+                                            Padding="16"
+                                            Background="{ThemeResource StudyMindSoftSurfaceBrush}"
+                                            Visibility="{Binding EmptyCourseMinutesChartVisibility}">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="暂无课程学习投入。记录学习后会自动按课程汇总。"
+                                                TextWrapping="Wrap" />
+                                        </Border>
+                                    </Grid>
+                                    <ListView ItemsSource="{Binding CourseMinutes}" MaxHeight="160" Visibility="{Binding CourseMinutesDetailsVisibility}" AutomationProperties.Name="课程学习占比明细">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Padding="6" ColumnSpacing="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding CourseName}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding MinutesText}" Style="{StaticResource MetaTextStyle}" />
+                                                    <TextBlock Grid.Column="2" Text="{Binding PercentageText}" Style="{StaticResource MetaTextStyle}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Grid x:Name="ReviewProgressLayout" RowSpacing="18">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="ReviewProgressNarrow" />
+                                    <VisualState x:Name="ReviewProgressWide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="500" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="ReviewProgressLayout.ColumnSpacing" Value="18" />
+                                            <Setter Target="ReviewProgressPrimaryColumn.Width" Value="1.35*" />
+                                            <Setter Target="ReviewProgressSecondaryColumn.Width" Value="*" />
+                                            <Setter Target="CourseProgressPanel.(Grid.Row)" Value="0" />
+                                            <Setter Target="CourseProgressPanel.(Grid.Column)" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="ReviewProgressPrimaryColumn" Width="*" />
+                                <ColumnDefinition x:Name="ReviewProgressSecondaryColumn" Width="0" />
+                            </Grid.ColumnDefinitions>
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="情绪趋势" Style="{StaticResource SectionTitleStyle}" />
+                                    <Grid Height="230">
+                                        <lvc:CartesianChart
+                                            Series="{Binding EmotionScoreSeries}"
+                                            XAxes="{Binding EmotionXAxes}"
+                                            YAxes="{Binding EmotionYAxes}" />
+                                        <Border
+                                            Padding="16"
+                                            Background="{ThemeResource StudyMindSoftSurfaceBrush}"
+                                            Visibility="{Binding EmptyEmotionChartVisibility}">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="暂无情绪记录。在今日计划里写下状态后，这里会显示变化趋势。"
+                                                TextWrapping="Wrap" />
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="CourseProgressPanel" Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="课程完成率" Style="{StaticResource SectionTitleStyle}" />
+                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding OverallCompletionRate}" Height="10" />
+                                    <TextBlock Text="{Binding ReviewInsightText}" Style="{StaticResource MetaTextStyle}" />
+                                    <ListView ItemsSource="{Binding TopicProgress}" MaxHeight="220">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Padding="6" Spacing="4">
+                                                    <Grid ColumnSpacing="8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding CourseName}" FontWeight="SemiBold" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding CompletionRateText}" Opacity="0.72" />
+                                                    </Grid>
+                                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding CompletionRate}" Height="6" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Border Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="最近考试 / DDL" Style="{StaticResource SectionTitleStyle}" />
+                                <InfoBar
+                                    IsOpen="True"
+                                    Severity="Informational"
+                                    Title="暂无临近日程"
+                                    Message="添加考试或 DDL 后，这里会展示倒计时和未完成知识点数量。"
+                                    Visibility="{Binding EmptyUpcomingEventsVisibility}" />
+                                <ListView ItemsSource="{Binding UpcomingEvents}" MaxHeight="220">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SoftTileBorderStyle}" Margin="0,0,0,8">
+                                                <Grid ColumnSpacing="12">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="4" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="{ThemeResource StudyMindWarningBrush}" CornerRadius="2" />
+                                                    <StackPanel Grid.Column="1" Spacing="4">
+                                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <TextBlock Text="{Binding EventType}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                            <TextBlock Text="{Binding StartTimeDisplay}" Foreground="{ThemeResource StudyMindTextMutedBrush}" />
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding RemainingTopicsText}" Style="{StaticResource MetaTextStyle}" />
+                                                    </StackPanel>
+                                                    <Border Grid.Column="2" Style="{StaticResource WarningPillBorderStyle}" VerticalAlignment="Top">
+                                                        <TextBlock Text="{Binding DaysLeftText}" Foreground="{ThemeResource StudyMindWarningBrush}" FontSize="12" FontWeight="SemiBold" />
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Visibility="{Binding SettingsPageVisibility}">
+                    <Grid x:Name="SettingsLayout" RowSpacing="18">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="SettingsNarrow" />
+                                <VisualState x:Name="SettingsWide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="500" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="SettingsLayout.ColumnSpacing" Value="18" />
+                                        <Setter Target="SettingsPrimaryColumn.Width" Value="1.05*" />
+                                        <Setter Target="SettingsSecondaryColumn.Width" Value="0.95*" />
+                                        <Setter Target="SettingsSidePanel.(Grid.Row)" Value="0" />
+                                        <Setter Target="SettingsSidePanel.(Grid.Column)" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="SettingsPrimaryColumn" Width="*" />
+                            <ColumnDefinition x:Name="SettingsSecondaryColumn" Width="0" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource PanelBorderStyle}">
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="AI 建议设置" Style="{StaticResource SectionTitleStyle}" />
+                                <InfoBar
+                                    IsOpen="True"
+                                    Severity="Informational"
+                                    Title="隐私提示"
+                                    Message="启用 AI 模式时，今日状态文本和结构化学习摘要会发送到你配置的兼容接口。" />
+                                <StackPanel Spacing="10">
+                                    <ComboBox Header="建议模式" SelectedValue="{Binding AdviceMode, Mode=TwoWay}" SelectedValuePath="Tag">
+                                        <ComboBoxItem Content="本地规则" Tag="rules" />
+                                        <ComboBoxItem Content="优先 AI" Tag="hybrid" />
+                                        <ComboBoxItem Content="仅 AI" Tag="ai" />
+                                    </ComboBox>
+                                    <TextBox Header="Base URL" Text="{Binding AiBaseUrl, Mode=TwoWay}" />
+                                    <TextBox Header="模型" Text="{Binding AiModel, Mode=TwoWay}" />
+                                </StackPanel>
+                                <PasswordBox x:Name="AiApiKeyBox" Header="API Key" PlaceholderText="留空表示不修改已保存的 Key…" PasswordChanged="AiApiKeyBox_PasswordChanged" />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding AiKeyStatus}" Style="{StaticResource MetaTextStyle}" />
+                                        <TextBlock Text="{Binding AdviceModeDescription}" Style="{StaticResource MetaTextStyle}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Click="SaveSettings_Click" IsEnabled="{Binding IsNotBusy}" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                            <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                            <TextBlock Text="保存设置" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel x:Name="SettingsSidePanel" Grid.Row="1" Spacing="18">
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="本地数据" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding DatabasePath}" Style="{StaticResource MetaTextStyle}" IsTextSelectionEnabled="True" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding ExportCommand}" IsEnabled="{Binding IsNotBusy}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                                <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                                <TextBlock Text="导出 JSON" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1" Command="{Binding BackupCommand}" IsEnabled="{Binding IsNotBusy}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE777;" FontSize="14" />
+                                                <ProgressRing Width="16" Height="16" IsActive="{Binding IsBusy}" Visibility="{Binding BusyVisibility}" />
+                                                <TextBlock Text="备份数据库" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="应用状态" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource MetaTextStyle}" />
+                                    <TextBlock Text="所有学习记录、情绪日志和建议日志默认保存在本机 SQLite 数据库中。" Style="{StaticResource MetaTextStyle}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>
